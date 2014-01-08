@@ -5,7 +5,7 @@ import sys, os, subprocess, random
 CONFIG_DIR = os.path.expanduser(os.path.join("~", ".wallpyper"))
 CONFIG_FILE = os.path.join(CONFIG_DIR, ".config")
 CURRENT_COLLECTION_FILE = os.path.join(CONFIG_DIR, ".current")
-SET_BACKGROUND_COMMAND = "feh --bg-fill {path}"
+SET_BACKGROUND_COMMAND = ["feh", "--bg-fill"]
 NEXT = ("next", "forward", "after", ">")
 PREVIOUS = ("prev", "previous", "before", "back", "<")
 
@@ -81,7 +81,7 @@ class Collection(object):
         print(self.name, self.paths[self.current])
 
     def update(self):
-        subprocess.Popen(SET_BACKGROUND_COMMAND.format(path=self.paths[self.current]).split())
+        subprocess.Popen(SET_BACKGROUND_COMMAND + [self.paths[self.current]])
 
     def save(self):
         with open(self.path, "w") as f:

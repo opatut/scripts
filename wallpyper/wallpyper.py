@@ -93,8 +93,11 @@ class Collection(object):
             f.close()
 
 def get_current_collection():
-    with open(CURRENT_COLLECTION_FILE) as f:
-        return Collection(f.readlines()[0].strip())
+    if os.path.exists(CURRENT_COLLECTION_FILE):
+        with open(CURRENT_COLLECTION_FILE) as f:
+            return Collection(f.readlines()[0].strip())
+    else:
+        return
 
 def set_current_collection(name):
     with open(CURRENT_COLLECTION_FILE, "w") as f:
@@ -120,7 +123,10 @@ if __name__ == "__main__":
     if not len(sys.argv) > 1: usage()
 
     cmd = sys.argv[1]
-    if cmd in NEXT:
+
+    if (cmd in NEXT + PREVIOUS + ("random", "current")) and not get_current_collection():
+        print("Error: No current collection set.")
+    elif cmd in NEXT:
         get_current_collection().action_next()
     elif cmd in PREVIOUS:
         get_current_collection().action_previous()
@@ -136,7 +142,8 @@ if __name__ == "__main__":
         if len(sys.argv) != 3: usage()
         c = sys.argv[2]
         if c == "current":
-            get_current_collection().action_list()
+            if get_current_collection(): get_current_collection().action_list()
+            else: print("No current collection set.")
         elif c == "collections":
             print("\n".join(get_collections()))
         else: 

@@ -157,3 +157,4 @@ if __name__ == "__main__":
             get_current_collection().update()
         else:
             set_current_collection(c)
+    else: usage()
